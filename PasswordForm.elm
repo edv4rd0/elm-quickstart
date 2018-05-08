@@ -14,12 +14,13 @@ type alias Model =
   { name : String
   , password : String
   , passwordAgain : String
+  , age : Int
   }
 
 
 model : Model
 model =
-  Model "" "" ""
+  Model "" "" "" 0
 
 
 -- UPDATE
@@ -28,6 +29,7 @@ type Msg
     = Name String
     | Password String
     | PasswordAgain String
+    | Age String
 
 
 update : Msg -> Model -> Model
@@ -41,6 +43,12 @@ update msg model =
     
     PasswordAgain password ->
       { model | passwordAgain = password }
+    
+    Age age ->
+      let
+        newAge = Result.withDefault 0 ( String.toInt age )
+      in
+        { model | age = newAge }
 
 
 -- VIEW
@@ -49,6 +57,7 @@ view : Model -> Html Msg
 view model =
   div []
     [ input [ type_ "text", placeholder "Name", onInput Name ] []
+    , input [ type_ "number", placeholder "Age", onInput Age ] []
     , input [ type_ "password", placeholder "Password", onInput Password ] []
     , input [ type_ "password", placeholder "Re-enter Password", onInput PasswordAgain ] []
     , viewValidation model
